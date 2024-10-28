@@ -22,11 +22,17 @@ class BowlingGame:
 
     def calculate_score(self) -> int:
         score = 0
-        bonus_frame = False
+        bonus_throw = False
+        bonus_strike = 0
         for frame in self.frames:
-            if bonus_frame:
+            if bonus_strike > 0:
+                score = score + frame.score()
+                bonus_strike = bonus_strike - 1
+            if bonus_throw:
                 score = score + frame.get_first_throw()
-            bonus_frame = frame.score() == 10
+            if frame.get_first_throw() == 10:
+                bonus_strike = 1
+            bonus_throw = frame.score() == 10 and not frame.get_first_throw() == 10
             score = score + frame.score()
         return score
 
