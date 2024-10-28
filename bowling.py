@@ -42,7 +42,10 @@ class BowlingGame:
                 bonus_strike = bonus_strike + 2
             bonus_throw = frame.is_spare()
             score = score + frame.score()
-        score = score + self.first_bonus_throw + self.second_bonus_throw
+        strike_multiplier = 1
+        if self.first_bonus_throw == 10:
+            strike_multiplier = 2
+        score = score + self.first_bonus_throw + (self.second_bonus_throw*strike_multiplier)
         return score
 
     def set_first_bonus_throw(self, bonus_throw: int) -> None:
