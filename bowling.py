@@ -1,3 +1,6 @@
+from numba.cpython.numbers import bool_negate_impl
+from sympy import false
+
 from bowling_error import BowlingError
 from frame import Frame
 
@@ -19,7 +22,11 @@ class BowlingGame:
 
     def calculate_score(self) -> int:
         score = 0
+        bonus_frame = False
         for frame in self.frames:
+            if bonus_frame:
+                score = score + frame.get_first_throw()
+            bonus_frame = frame.score() == 10
             score = score + frame.score()
         return score
 
