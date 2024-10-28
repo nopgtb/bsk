@@ -3,6 +3,7 @@ from sympy import false
 
 from bowling_error import BowlingError
 from frame import Frame
+import math
 
 
 class BowlingGame:
@@ -26,13 +27,18 @@ class BowlingGame:
         bonus_strike = 0
         for frame in self.frames:
             if bonus_strike > 0:
-                score = score + frame.score()
-                bonus_strike = bonus_strike - 1
+                num_of_affected_strikes = math.ceil(bonus_strike / 2)
+                score = score + frame.get_first_throw() * num_of_affected_strikes
+                bonus_strike = bonus_strike - (1 * num_of_affected_strikes)
+                if frame.get_second_throw():
+                    num_of_affected_strikes = math.ceil(bonus_strike / 2)
+                    score = score + frame.get_second_throw() * num_of_affected_strikes
+                    bonus_strike = bonus_strike - (1 * num_of_affected_strikes)
             if bonus_throw:
                 score = score + frame.get_first_throw()
             if frame.get_first_throw() == 10:
-                bonus_strike = 1
-            bonus_throw = frame.score() == 10 and not frame.get_first_throw() == 10
+                bonus_strike = bonus_strike + 2
+            bonus_throw = frame.is_spare()
             score = score + frame.score()
         return score
 
